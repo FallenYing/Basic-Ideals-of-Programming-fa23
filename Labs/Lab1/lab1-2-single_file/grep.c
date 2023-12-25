@@ -1,10 +1,9 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <Windows.h>
 #include <string.h>
 
-int getline(char line[], int max);
+int get_line(char line[], int max);
 int strindex(const char source[], const char searchfor[]);
 int grep(const char* pattern);
 bool test_getline(void);
@@ -46,30 +45,54 @@ int main(const int argc, const char* argv[]) {
     return 0;
 }
 
-/* getline: get line into s, return length */
-int getline(char s[], int lim) {
-    // TODO
-    printf("ERROR: TODO getline");
-    exit(1);
+/* get_line: get line into s, return length */
+int get_line(char s[], int lim) {
+    int len = 0;
+    for (; len < lim; len++) {
+        char ch = getchar();
+        if (ch == EOF) {
+            s[len] = '\0';
+            return len - 1;
+        }
+        s[len] = ch;
+        if (ch == '\n') {
+            s[len + 1] = '\0';
+            return len;
+        }
+    }
+    s[lim - 1] = '\0';
+    return lim;
 }
 
 /* strindex: return index of t in s, -1 if none */
 int strindex(const char s[], const char t[]) {
-    // TODO
-    printf("ERROR: TODO strindex");
-    exit(1);
+    for (int i = 0; s[i] != '\0'; i++) {
+        for (int j = 0; t[j] != '\0'; j++) {
+            if (s[i + j] != t[j]) {
+                break;
+            }
+            if (t[j + 1] == '\0') {
+                return i;
+            }
+        }
+    }
+    return -1;
 }
 
 /* grep: print the line match the pattern, return count of matches */
 int grep(const char* pattern) {
     #define MAXLINE 1000
     char line[MAXLINE];
-    // TODO
-    freopen("CON","w",stdout);
-    printf("ERROR: TODO grep");
-    exit(1);
-
-    #undef MAXLINE
+    int count = 0;
+    while (!feof(stdin)) {
+        get_line(line, MAXLINE);
+        if (strindex(line, pattern) != -1) {
+            count++;
+            printf("%s", line);
+        }
+    }
+#undef MAXLINE
+    return count;
 }
 
 bool test_getline(void) {
@@ -78,7 +101,7 @@ bool test_getline(void) {
     #define LINE_LENGTH 50
     char expected[LINE_LENGTH], actual[LINE_LENGTH];
     if (fgets(expected, 50, file)) {
-        getline(actual, LINE_LENGTH);
+        get_line(actual, LINE_LENGTH);
         if (strcmp(expected, actual)) {
             fclose(fp_stdin);
             fclose(file);
