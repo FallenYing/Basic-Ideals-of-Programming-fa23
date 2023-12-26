@@ -67,41 +67,151 @@ void swap(int *a, int *b) {
 }
 
 void initialize_board(void) {
-    /* to do */
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            board[i][j] = 0;
+        }
+    }
 }
 
 bool is_finished(void) {
     bool flag_2048 = false;
     bool flag_no_space = true;
-
-    /* to do */
-
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            if (board[i][j] == 2048) {
+                flag_2048 = true;
+            }
+            if (board[i][j] == 0) {
+                flag_no_space = false;
+            }
+        }
+    }
     return flag_2048 || flag_no_space;
 }
 
 bool move_and_merge_left(void) {
-    /* to do */
-    return false;
+    bool flag = false;
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE - 1; j++) {
+            if (board[i][j] == 0) {
+                for (int k = j + 1; k < BOARD_SIZE; k++) {
+                    if (board[i][k] != 0) {
+                        swap(&board[i][j], &board[i][k]);
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        for (int j = 0; j < BOARD_SIZE - 1; j++) {
+            if (board[i][j] == 0)
+                break;
+            if (board[i][j] == board[i][j + 1]) {
+                board[i][j] *= 2;
+                board[i][j + 1] = 0;
+                for (int k = j + 1; k < BOARD_SIZE - 1; k++) {
+                    swap(&board[i][k], &board[i][k + 1]);
+                }
+                flag = true;
+            }
+        }
+    }
+    return flag;
 }
 
 bool move_and_merge_right(void) {
-    /* to do */
-    return false;
+    bool flag = false;
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = BOARD_SIZE - 1; j > 0; j--) {
+            if (board[i][j] == 0) {
+                for (int k = j - 1; k >= 0; k--) {
+                    if (board[i][k] != 0) {
+                        swap(&board[i][j], &board[i][k]);
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        for (int j = BOARD_SIZE - 1; j > 0; j--) {
+            if (board[i][j] == 0)
+                break;
+            if (board[i][j] == board[i][j - 1]) {
+                board[i][j] *= 2;
+                board[i][j - 1] = 0;
+                for (int k = j - 1; k > 0; k--) {
+                    swap(&board[i][k], &board[i][k - 1]);
+                }
+                flag = true;
+            }
+        }
+    }
+    return flag;
 }
 
 bool move_and_merge_up(void) {
-    /* to do */
-    return false;
+    bool flag = false;
+    for (int j = 0; j < BOARD_SIZE; j++) {
+        for (int i = 0; i < BOARD_SIZE - 1; i++) {
+            if (board[i][j] == 0) {
+                for (int k = i + 1; k < BOARD_SIZE; k++) {
+                    if (board[k][j] != 0) {
+                        swap(&board[i][j], &board[k][j]);
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < BOARD_SIZE - 1; i++) {
+            if (board[i][j] == 0)
+                break;
+            if (board[i][j] == board[i + 1][j]) {
+                board[i][j] *= 2;
+                board[i + 1][j] = 0;
+                for (int k = i + 1; k < BOARD_SIZE - 1; k++) {
+                    swap(&board[k][j], &board[k + 1][j]);
+                }
+                flag = true;
+            }
+        }
+    }
+    return flag;
 }
 
 bool move_and_merge_down(void) {
-    /* to do */
-    return false;
+    bool flag = false;
+    for (int j = 0; j < BOARD_SIZE; j++) {
+        for (int i = BOARD_SIZE - 1; i > 0; i--) {
+            if (board[i][j] == 0) {
+                for (int k = i - 1; k >= 0; k--) {
+                    if (board[k][j] != 0) {
+                        swap(&board[i][j], &board[k][j]);
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = BOARD_SIZE - 1; i > 0; i--) {
+            if (board[i][j] == 0)
+                break;
+            if (board[i][j] == board[i - 1][j]) {
+                board[i][j] *= 2;
+                board[i - 1][j] = 0;
+                for (int k = i - 1; k >= 0; k--) {
+                    swap(&board[k][j], &board[k - 1][j]);
+                }
+                flag = true;
+            }
+        }
+    }
+    return flag;
 }
 
 void run_game(void) {
     /*After completing, delete the following line to start the game.*/
-    return;
 
     srand(time(0));
     initialize_board();
